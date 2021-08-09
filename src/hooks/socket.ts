@@ -4,13 +4,13 @@ const { setState } = useUser();
 let socket: WebSocket;
 
 const socketActions: SocketActions = {
-  connect(res) {
-    console.log(res.msg);
-    setState(res.data.state);
-  },
-  getRooms(res) {
-    console.log(res);
-  },
+  connect: [
+    (res) => {
+      console.log(res.msg);
+      setState(res.data.state);
+    },
+  ],
+  getRooms: [],
 };
 const useSocket = (name: string) => {
   const user = {
@@ -25,7 +25,8 @@ const useSocket = (name: string) => {
     };
     socket.onmessage = (e) => {
       const data = JSON.parse(e.data) as SocketVO;
-      if (data.type in socketActions) socketActions[data.type](data);
+      if (data.type in socketActions)
+        socketActions[data.type].forEach((fn) => fn(data));
     };
     socket.onclose = () => {
       socket = null;
@@ -49,10 +50,19 @@ const useSocket = (name: string) => {
     params.name = user.name;
     ins.send(JSON.stringify(params));
   }
-  getSocket();
+  function add(key: SocketActionsEnum, callback: ActionsFn) {
+    socketActions[key].push(callback);
+  }
+  function remove(key: SocketActionsEnum, callback: ActionsFn) {
+    const index = socketActions[key].findIndex((m) => m === callback);
+    if (index > -1) socketActions[key].splice(index, 1);
+  }
   return {
+    initSocket,
     getSocket,
     send,
+    add,
+    remove,
   };
 };
 export default useSocket;

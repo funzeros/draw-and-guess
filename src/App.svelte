@@ -5,19 +5,27 @@
   import useSocket from "./hooks/socket";
   const { getName, getState } = useUser();
   const userName = getName();
-  const { send } = useSocket(userName);
-  let state = getState();
+  const { send, add, initSocket } = useSocket(userName);
+  let state = "offLine";
   let rooms: Rooms = [];
-  const getRooms = () => {
-    send({ type: "getRooms" });
+  const getRooms: ActionsFn = (res) => {
+    console.log(res);
   };
+  const changeState = () => {
+    state = getState();
+  };
+  add("connect", changeState);
+  add("getRooms", getRooms);
+  initSocket();
 </script>
 
 <main>
   {#if state === "rooming"}
-    <Room bind:rooms on:getRooms={getRooms} />
-  {:else}
+    <Room bind:rooms />
+  {:else if state === "gaming"}
     <DrawingBoard />
+  {:else}
+    <div />
   {/if}
 </main>
 

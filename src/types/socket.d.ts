@@ -1,7 +1,7 @@
 type ActionsFn = (res: SocketVO) => void;
 interface SocketActions {
-  connect: ActionsFn;
-  getRooms: ActionsFn;
+  connect: ActionsFn[];
+  getRooms: ActionsFn[];
 }
 type SocketActionsEnum = keyof SocketActions;
 interface SocketData<T = any> {
