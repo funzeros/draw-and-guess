@@ -1,7 +1,9 @@
-type ActionsFn = (res: SocketVO) => void;
+type ActionsFn<T = SocketData> = (res: SocketVO<T>) => void;
 interface SocketActions {
   connect: ActionsFn[];
-  getRooms: ActionsFn[];
+  createRoom: ActionsFn[];
+  enterRoom: ActionsFn[];
+  getRoomList: ActionsFn[];
 }
 type SocketActionsEnum = keyof SocketActions;
 interface SocketData<T = any> {

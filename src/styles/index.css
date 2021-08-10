@@ -12,7 +12,30 @@ body,
   box-sizing: border-box;
   user-select: none;
 }
-
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
 :root {
   --color-white: #fff;
+}
+
+.basic-scroll::-webkit-scrollbar,
+.basic-scroll-child-div > div::-webkit-scrollbar {
+  border-radius: 4px;
+  width: 10px;
+  height: 10px;
+}
+.basic-scroll::-webkit-scrollbar-track,
+.basic-scroll-child-div > div::-webkit-scrollbar-track {
+  border-radius: 4px;
+  background-color: transparent;
+}
+.basic-scroll::-webkit-scrollbar-thumb,
+.basic-scroll-child-div > div::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: #ccc;
 }

@@ -6,6 +6,18 @@ export const STORE_MOD = {
 
 export const useUser = () => {
   const store = useGStore(STORE_MOD.USER);
+  function tempSet<T>(k: string) {
+    return (p: T) => {
+      return store.setItem(k, p);
+    };
+  }
+  function tempGet<T>(k: string, defaultV: T) {
+    return () => {
+      const v = store.getItem(k);
+      if (!v) store.setItem(k, defaultV);
+      return store.getItem(k);
+    };
+  }
   return {
     store,
     getName() {
@@ -17,15 +29,9 @@ export const useUser = () => {
       }
       return store.getItem(k);
     },
-    getState() {
-      const k = "state";
-      const v = store.getItem(k);
-      if (!v) store.setItem(k, "rooming");
-      return store.getItem(k);
-    },
-    setState(p: string) {
-      const k = "state";
-      return store.setItem(k, p);
-    },
+    getState: tempGet("state", "rooming"),
+    setState: tempSet("state"),
+    getRoomId: tempGet("roomId", 0),
+    setRoomId: tempSet("roomId"),
   };
 };

@@ -2,20 +2,21 @@ import { useUser } from "./store";
 
 const { setState } = useUser();
 let socket: WebSocket;
-
-const socketActions: SocketActions = {
+const user = {
+  name: "",
+};
+const socketActions: Partial<SocketActions> = {
   connect: [
     (res) => {
       console.log(res.msg);
       setState(res.data.state);
     },
   ],
-  getRooms: [],
+  createRoom: [],
+  enterRoom: [],
 };
-const useSocket = (name: string) => {
-  const user = {
-    name,
-  };
+const useSocket = (name?: string) => {
+  name && (user.name = name);
   let time = 0;
   function initSocket() {
     const url = "localhost:10053/dagws";
@@ -51,9 +52,11 @@ const useSocket = (name: string) => {
     ins.send(JSON.stringify(params));
   }
   function add(key: SocketActionsEnum, callback: ActionsFn) {
+    if (!socketActions[key]) socketActions[key] = [];
     socketActions[key].push(callback);
   }
   function remove(key: SocketActionsEnum, callback: ActionsFn) {
+    if (!socketActions[key]) return;
     const index = socketActions[key].findIndex((m) => m === callback);
     if (index > -1) socketActions[key].splice(index, 1);
   }
